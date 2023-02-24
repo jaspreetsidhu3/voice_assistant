@@ -2,3 +2,4 @@ pyttsx3
 wikipedia
 SpeechRecognition
 PyAudio
+pycopy-webbrowser
