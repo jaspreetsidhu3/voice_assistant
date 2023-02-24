@@ -1,3 +1,4 @@
+#This python program is a voice assistant that opens websites as asked
 import sys
 import pyttsx3
 import speech_recognition as sr
