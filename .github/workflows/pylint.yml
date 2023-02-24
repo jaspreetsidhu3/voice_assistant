@@ -33,4 +33,4 @@ jobs:
         
     - name: Analysing the code with pylint
       run: |
-        pylint amigo.py --disable=C0301,C0303,C0114,C0103,C0413,C0209,C0200
+        pylint amigo.py --disable=C0301,C0303,C0114,C0116,C0411,W0621,W0718,W0104
