@@ -14,16 +14,21 @@ jobs:
       uses: actions/setup-python@v3
       with:
         python-version: ${{ matrix.python-version }}
-    - name: Install dependencies
+      
+    - name: Install PyAudio
       run: |
         pip install wheel
         pip wheel PyAudio -w wheels
+        
+    
+    - name: Install dependencies
+      run: |
         sudo apt-get update
         sudo apt-get install -y portaudio19-dev
-        pip install --upgrade pip
-        python -m pip install --upgrade pip
+        pip install --upgrade pip 
         pip install -r requirements.txt
         pip install pylint
+        
         
     - name: Analysing the code with pylint
       run: |
