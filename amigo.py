@@ -3,6 +3,7 @@ import speech_recognition as sr
 import wikipedia
 import webbrowser
 import os
+import sys
 
 # init pyttsx
 engine = pyttsx3.init("sapi5")
