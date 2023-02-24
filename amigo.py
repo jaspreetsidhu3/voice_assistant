@@ -82,4 +82,4 @@ if __name__ == '__main__':
             speak("opening local disk E")
             webbrowser.open("E://")
         elif 'sleep' in query:
-            exit(0)
+            sys.exit
