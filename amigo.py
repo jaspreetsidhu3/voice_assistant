@@ -4,7 +4,7 @@ import wikipedia
 import webbrowser
 import os
 
-# init pyttsx
+# Init pyttsx
 engine = pyttsx3.init("sapi5")
 voices = engine.getProperty("voices")
 
@@ -12,33 +12,61 @@ engine.setProperty('voice', voices[1].id)  # 1 for female and 0 for male voice
 
 
 def speak(audio):
+    print("speaking: ", audio)
     engine.say(audio)
     engine.runAndWait()
 
+def choose_microphone():
+    # Get a list of available microphones and print their names/indexes
+    mic_list = sr.Microphone.list_microphone_names()
+    print("Available Microphones:")
+    for i, mic_name in enumerate(mic_list):
+        print(f"{i}: {mic_name}")
 
-def take_command():
+    # Ask the user to select a microphone by index
+    while True:
+        try:
+            selected_index = int(input("Enter the index of the microphone you want to use: "))
+            if 0 <= selected_index < len(mic_list):
+                return selected_index
+            else:
+                print("Invalid index. Please select a valid index.")
+        except ValueError:
+            print("Invalid input. Please enter a valid index.")
+
+def take_command(selected_microphone_index):
     r = sr.Recognizer()
-    with sr.Microphone() as source:
-        print("Listening...")
-        r.pause_threshold = 1
-        audio = r.listen(source)
-    try:
-        print("Recognizing...")
-        query = r.recognize_google(audio, language='en-in')
-        print("User said:" + query + "\n")
-    except Exception as e:
-        print(e)
-        speak("I didnt understand")
-        return "None"
-    return query
+    with sr.Microphone(device_index=selected_microphone_index) as source:
+        try:
+            print("Listening...")
+            r.pause_threshold = 1
+            audio = r.listen(source)
+            print("Audio captured")
 
+            try:
+                print("Recognizing...")
+                query = r.recognize_google(audio, language='en-US')
+                print("User said: " + query + "\n")
+                return query
+            except Exception as e:
+                print("Error recognizing speech: " + str(e))
+                speak("I didn't understand")
+                return "None"
+        except Exception as ex:
+            print("Error capturing audio: " + str(ex))
+            speak("There was an error capturing audio.")
+            return "None"
 
 if __name__ == '__main__':
-
     speak("Amigo assistance activated ")
-    speak("How can i help you")
+    speak("How can I help you")
+
+    # Allow the user to choose a microphone
+    selected_microphone_index = choose_microphone()
+    print(f"Using microphone {selected_microphone_index}: {sr.Microphone.list_microphone_names()[selected_microphone_index]}")
+
     while True:
-        query = take_command().lower()
+        query = take_command(selected_microphone_index).lower()
         if 'wikipedia' in query:
             speak("Searching Wikipedia ...")
             query = query.replace("wikipedia", '')
