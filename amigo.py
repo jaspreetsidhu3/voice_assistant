@@ -3,11 +3,14 @@ import speech_recognition as sr
 import wikipedia
 import webbrowser
 import os
+import logging
+
+# Initialize logging
+logging.basicConfig(level=logging.INFO)
 
 # Initialize the text-to-speech engine
 engine = pyttsx3.init("sapi5")
 voices = engine.getProperty("voices")
-# Set voice property to female
 engine.setProperty('voice', voices[1].id)
 
 def speak(audio):
@@ -19,18 +22,23 @@ def take_command():
     """Function to take command from the microphone"""
     r = sr.Recognizer()
     with sr.Microphone() as source:
-        print("Listening...")
+        logging.info("Listening...")
         r.pause_threshold = 1
         audio = r.listen(source)
     try:
-        print("Recognizing...")
+        logging.info("Recognizing...")
         query = r.recognize_google(audio, language='en-in')
-        print(f"User said: {query}\n")
-    except Exception as e:
-        print(e)
-        speak("I didn't understand")
+        logging.info(f"User said: {query}")
+    except sr.UnknownValueError:
+        speak("Sorry, I didn't catch that. Could you please repeat?")
+        return "None"
+    except sr.RequestError:
+        speak("Sorry, there seems to be a problem with the service.")
         return "None"
     return query
+
+# Define command functions here
+# ...
 
 def main():
     """Main function to run the assistant"""
@@ -38,21 +46,8 @@ def main():
     speak("How can I help you?")
     while True:
         query = take_command().lower()
-        if 'wikipedia' in query:
-            speak("Searching Wikipedia...")
-            query = query.replace("wikipedia", '')
-            results = wikipedia.summary(query, sentences=2)
-            speak("According to Wikipedia")
-            speak(results)
-        elif 'are you' in query:
-            speak("I am Amigo, developed by Jaspreet Singh")
-        elif 'open youtube' in query:
-            speak("Opening YouTube")
-            webbrowser.open("youtube.com")
-        # ... [rest of the commands]
-        elif 'sleep' in query:
-            speak("Goodbye!")
-            break
+        # Process commands using separate functions
+        # ...
 
 if __name__ == '__main__':
     main()
