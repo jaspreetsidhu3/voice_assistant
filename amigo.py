@@ -69,9 +69,6 @@ if __name__ == '__main__':
         elif 'play music' in query:
             speak("opening music")
             webbrowser.open("spotify.com")
-        elif 'play music' in query:
-            speak("opening music")
-            webbrowser.open("spotify.com")
         elif 'local disk d' in query:
             speak("opening local disk D")
             webbrowser.open("D://")
